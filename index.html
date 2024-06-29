@@ -7,21 +7,22 @@
     </head>
     <body>
         <div id="shopping-list">
+            <h1>Hi Vue!</h1>
+            <h1>{{ header ? header : "welcome"}}</h1>  
+            <input v-model="header" type="text" >
             <div class="header">
                 <h1>{{ header.toLocaleUpperCase() }}</h1>
                 <button v-if="state === 'default'" class="btn btn-primary" @click="changeState('edit')">Add Item</button>
                 <button v-else class="btn btn-cancel" @click="changeState('default')">Cancel</button>
             </div>
-            <h1>Hi Vue!</h1>
-            <h1>{{ header ? header : "welcome"}}</h1>  
-            <input v-model="header" type="text" >
             <div v-if="state === 'edit'" class="add-item-form">
               <input v-model="newItem" type="text" placeholder="Add an item" @keyup.enter="saveItem"> 
               <button class="btn btn-primary" :disabled="newItem.length === 0" @click="saveItem">Save Item</button> 
+              <p>{{ characterCount }}/200</p>
             </div>
             <a v-bind:href="newItem" target="_blank">Dynamic link</a>
             <ul>
-                <li v-for="item in items" :class="{strikeout :item.purchased, priority :item.highPriority}" @click="togglePurchased(item)">{{ item.label }}</li>
+                <li v-for="item in reversedItems" :class="{strikeout :item.purchased, priority :item.highPriority}" @click="togglePurchased(item)">{{ item.label }}</li>
             </ul>
             <p v-if="items.length === 0">Nice job!</p>
         </div>
@@ -51,6 +52,14 @@
                         }
                     ]
                 },
+                computed: {
+                    characterCount() {
+                        return this.newItem.length
+                    },
+                    reversedItems() {
+                        return this.items.slice(0).reverse()
+                    }
+                },
                 methods: {
                     saveItem: function() {
                         this.items.push({
@@ -74,13 +83,20 @@
         <div>
         //in the console:   
         //shoppingList.$data.items.pop()
-
+        </div>
+        <div>
         //usind Devtools and console: $vm0.items 
         //$vm0.newItem = '1 awasome vueschool.io course'
         //$vm0.items.push($vm0.newItem)  
         //$vm0.saveItem()
-
+        </div>
+        <div>
         // class array syntax: li v-for="item in items" class="priority" :class="[item.purchased ? 'strikeout' : '', item.highPriority ? 'priority' : '']">{{ item.label }}</li>
+        </div>
+        <div>
+        // we use slice js method to copy array for presentation layer, not to change original one with reverse
+        //When you need to change data you will use methods. 
+        //And when you need to change the presentation of existing data, you'll use computed property
         </div>
     </footer>
 </html>
